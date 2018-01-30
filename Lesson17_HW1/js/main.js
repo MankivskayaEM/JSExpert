@@ -1,4 +1,4 @@
-var btn = document.getElementById("play");
+/*var btn = document.getElementById("play");
 var myArr = [],
 	myChangedArr = [],
 	filteredArr = [];
@@ -65,9 +65,88 @@ function filterArr(arr){
 
 function printResult(result){
 	console.log(result);
+}*/
+
+
+
+/* fixed variant */
+var btn = document.getElementById("play");
+var myArr = [],
+	myChangedArr = [],
+	filteredArr = [];
+
+function transform() {
+	cutOff(data, 6, 1);
+	getNewArr(data, myArr);
+   	printResult(filterArr(changeArr(myArr)));
 }
 
+function cutOff(arr, startPos, amount) {
+	arr.splice(--startPos, amount);
+}
 
+function getNewArr(oldArr, newArr) {
+	oldArr.forEach((elem, index) => {
+		newArr.push(Object.assign({}, elem));
+		delete newArr[index].id;
+	});
+}
+
+function changeArr(arr) {
+	return arr.map((elem) => {
+		return {
+			name : changeRegister(elem.name),
+			url : changeUrl(elem.url),
+			description : cutLongString(elem.description),
+			date : formatDate(elem.date),
+			params : getParams(elem.params),
+			isVisible : elem.params.status
+		}
+	});
+};
+
+function changeRegister(word) {
+	return `${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`;
+}
+
+function changeUrl(url){
+	var protocol = 'http://';
+	if (url.indexOf(protocol) !== 0) {
+		return `http://${url}`;
+	} else {
+		return url;
+	}
+}
+
+function cutLongString(str){
+	if (str.length > 15) {
+		return `${str.substr(0,15)}...`;
+	} else {
+		return str;
+	}
+}
+
+function formatDate(date){
+	if (typeof date === 'number') {
+		return (moment(date).format('YYYY/MM/DD hh:mm'));
+	} else {
+		return 'Wrong date';
+	}
+}
+
+function getParams(param){
+	return `${param.status}=>${param.progress}`;
+}
+
+function filterArr(arr){
+	return arr.filter((elem) => elem.isVisible);
+}
+
+function printResult(result){
+	console.log(result);
+}
+
+btn.addEventListener("click", transform);
 
 
 
