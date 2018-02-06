@@ -8,16 +8,21 @@ let btn = document.getElementById("play"),
     secondGroup = document.querySelector('.second-group'),
     thirdGroup = document.querySelector('.third-group');
 
+let groupsArr = [firstGroup, secondGroup, thirdGroup];
+
 let resultArr = [];
 
 let typeSelectValue,
     amountSelectValue;
 
-firstGroup.classList.add("hide");
-secondGroup.classList.add("hide");
-thirdGroup.classList.add("hide");
-
 resultArr = getResultArr(data);
+setGroupsHide(groupsArr);
+
+function setGroupsHide(arr) {
+    for (var i = 0; i < arr.length; i++) {
+        arr[i].classList.add('hide');
+    }
+}
 
 // get new changed array
 function getResultArr(arr){
@@ -75,9 +80,7 @@ function init() {
         typeSelectValue = newTypeSelectValue;
         amountSelectValue = newAmountSelectValue;
 
-        firstGroup.classList.add("hide");
-        secondGroup.classList.add("hide");
-        thirdGroup.classList.add("hide");
+        setGroupsHide(groupsArr);
 
         switch (+amountSelectValue) {
             case 0:
@@ -124,7 +127,6 @@ function init() {
                                              .replace("$url$", resultArr[i].url)
                                              .replace("$description$", resultArr[i].description)
                                              .replace("$date$", resultArr[i].date);
-            console.log(resultHTML);
         }
         firstBlock.innerHTML = resultHTML;
     }
