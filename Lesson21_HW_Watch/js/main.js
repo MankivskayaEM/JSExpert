@@ -12,9 +12,11 @@
 		timerMode : true
 	}
 
+	// run timer
  	watchGo(dateObj);
  	let timer = setInterval(watchGo, 1000, dateObj);
 
+ 	// switch timer button
  	let switchTimer = () => {
  		if (dateObj.timerMode) {
 	 		dateObj.timerMode = false;
@@ -27,28 +29,35 @@
  		}
  	}
 
-	function watchGo() {
+ 	// timer function
+	function watchGo(dateObj) {
 		const myDate = new Date();
+		const daysToFinal = getDaysLeft(dateObj.targetDate, myDate);
+	 	printResult(dateObj, myDate, daysToFinal);
+	}
 
+	// get how many days left
+	function getDaysLeft(finalDate, currentDate) {
+		return Math.round((finalDate.getTime() - currentDate.getTime()) / (86400*1000));
+	}
+
+	// set proper word
+	function setDayWord(num) {
+		if (num % 10 === 1) {
+			return 'день';
+		} else if (num % 10 === 2 || num % 10 === 3 || num % 10 === 4) {
+			return 'дня';
+		} else {
+			return 'дней'
+		}
+	}
+
+	// print data
+	function printResult(dateObj, myDate, daysToFinal) {
 		dateObj.weekDayElem.textContent = myDate.toLocaleDateString('ru', {weekday:'long'});
 		dateObj.dateMonthElem.textContent = myDate.toLocaleDateString('ru', {day: '2-digit', month: 'long'});
 		dateObj.currentTimeElem.textContent = myDate.toLocaleTimeString('ru', {hour: '2-digit', minute: '2-digit', second: '2-digit'});
-
-	 	dateObj.daysLeft = Math.round((dateObj.targetDate.getTime() - myDate.getTime()) / (86400*1000));
-	 	let num = dateObj.daysLeft.toString()[dateObj.daysLeft.toString().length-1];
-	 	switch (+num){
-	 		case 1 :
-	 			dateObj.dayWord = 'день';
-	 			break;
-	 		case 2 :
-	 		case 3 :
-	 		case 4 :
-	 			dateObj.dayWord = 'дня';
-	 			break;
-	 		default : 
-	 			num = 'дней';
-	 	}
-	 	dateObj.daysLeftElem.textContent = `${dateObj.daysLeft} ${dateObj.dayWord}`;
+	 	dateObj.daysLeftElem.textContent = `${daysToFinal} ${setDayWord(daysToFinal)}`;
 	}
 
 	dateObj.stopBtn.addEventListener('click', switchTimer);
